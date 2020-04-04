@@ -4,6 +4,7 @@ module.exports = {
     description: `Dashboard for Corona-chan`,
     author: `Al Yin`,
   },
+  pathPrefix: "/coronatrack",
   plugins: [
     `gatsby-plugin-sass`,
     `gatsby-plugin-react-helmet`,
