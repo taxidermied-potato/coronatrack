@@ -2,41 +2,56 @@ import { Link } from "gatsby"
 import PropTypes from "prop-types"
 import React from "react"
 
-const Header = ({ siteTitle }) => (
-  <header
-    style={{
-      background: `rebeccapurple`,
-      marginBottom: `1.45rem`,
-    }}
-  >
-    <div
-      style={{
-        margin: `0 auto`,
-        maxWidth: 960,
-        padding: `1.45rem 1.0875rem`,
-      }}
-    >
-      <h1 style={{ margin: 0 }}>
+import Logo from "../images/logo.svg"
+import { Switch } from 'antd';
+import { FaSun, FaMoon } from 'react-icons/fa';
+import { useSelector, useDispatch } from "react-redux";
+import "../styles/ants.scss"
+
+const Header = ({ siteTitle }) => {
+  const darkMode = useSelector(state => state.darkMode);
+  const dispatch = useDispatch();
+
+  return (
+    <header>
+      <div className="nav">
         <Link
+          className="logo"
           to="/"
-          style={{
-            color: `white`,
-            textDecoration: `none`,
-          }}
         >
-          {siteTitle}
+          <img className="logo" src={Logo} alt="logo" />
+          <h1>
+            {siteTitle}
+          </h1>
         </Link>
-      </h1>
-    </div>
-  </header>
-)
+        <span>
+          v1.0
+      </span>
+        <span className="mlAuto" />
+        <Link to="/">
+          <h2> Dashboard </h2>
+        </Link>
+        <Link to="/about">
+          <h2> About </h2>
+        </Link>
+        <Link to="/contribute">
+          <h2> Contribute </h2>
+        </Link>
+        <div style={{ marginLeft: '1rem' }}>
+          <Switch defaultChecked={darkMode ? true : false} checkedChildren={<FaMoon />} unCheckedChildren={<FaSun />} onChange={() => dispatch({ type: `SWAP_THEME`})} />
+        </div>
+      </div>
+    </header>
+  )
+}
 
 Header.propTypes = {
   siteTitle: PropTypes.string,
 }
 
 Header.defaultProps = {
-  siteTitle: ``,
+  siteTitle: '',
+  theme: false,
 }
 
 export default Header

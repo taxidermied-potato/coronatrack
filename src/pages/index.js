@@ -1,21 +1,34 @@
-import React from "react"
-import { Link } from "gatsby"
+import React, { useState } from "react"
 
 import Layout from "../components/layout"
-import Image from "../components/image"
 import SEO from "../components/seo"
+import Dashboard from "../components/dash/dashboard"
+import { FaChevronUp, FaChevronDown } from 'react-icons/fa';
 
-const IndexPage = () => (
-  <Layout>
-    <SEO title="Home" />
-    <h1>Hi people</h1>
-    <p>Welcome to your new Gatsby site.</p>
-    <p>Now go build something great.</p>
-    <div style={{ maxWidth: `300px`, marginBottom: `1.45rem` }}>
-      <Image />
-    </div>
-    <Link to="/page-2/">Go to page 2</Link>
-  </Layout>
-)
+const IndexPage = () => {
+  const [show, setShow] = useState(true)
+
+  return (
+    <Layout>
+      <div className="homeContainer">
+        <SEO title="Home" />
+
+        <div className={show ? "containerSmall collapseIn" : "containerSmall collapseOut"}>
+          <h2 className="highlight">Home</h2>
+          <h3>To fellow quaranteers from across the globe, </h3>
+          <p>Welcome to my customizable coronavirus (COVID-19) dashboard. I'm of the opinion that not many things should be indelible, so every modular component is collapsible, movable, and reproducible. </p>
+        </div>
+
+        {show ?
+          <FaChevronUp className="pop" onClick={() => setShow(false)} />
+          :
+          <FaChevronDown className="pop" style={{ zIndex: "5" }} onClick={() => setShow(true)} />
+        }
+        <Dashboard />
+      </div>
+    </Layout>
+  )
+
+}
 
 export default IndexPage
