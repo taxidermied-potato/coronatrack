@@ -1,6 +1,6 @@
 <!-- AUTO-GENERATED-CONTENT:START (STARTER) -->
 <p align="center">
-  <img alt="Coronatrack" src="https://altyin.com/coronatrack/logo.png" width="60" />
+  <img alt="Coronatrack" src="./src/images/logo.svg" width="60" />
 </p>
 <h1 align="center">
   Coronatrack
