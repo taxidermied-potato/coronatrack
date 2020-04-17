@@ -1,6 +1,7 @@
 import React from 'react'
 import DashTop from './dashTop'
 import DashSide from './dashSide'
+import DashMain from './main'
 
 import './dashboard.scss'
 
@@ -9,12 +10,8 @@ const Dashboard = () => {
     <div className="dashboard">
       <DashTop />
       <DashSide />
-      <div className="dashMain">        
-        <div className="card">
-          <div className="cardBody">
-          <p>Main</p>
-          </div>
-        </div>
+      <div className="dashMain">
+        <DashMain />
       </div>
     </div>
   )

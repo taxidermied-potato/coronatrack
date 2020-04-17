@@ -1,0 +1,120 @@
+.taco-table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  margin-bottom: .5rem;
+  max-width: 100%;
+
+  th {
+    font-weight: 400 !important;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+}
+
+tbody {
+  .dark & {
+    color: #c1c8da;
+  }
+
+  .light & {
+    color: rgba(0, 0, 0, 0.65);
+  }
+
+  display: block;
+  overflow: auto;
+  max-height: 15rem;
+}
+
+tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
+.taco-table * {
+  box-sizing: border-box;
+}
+
+.taco-table.table-full-width {
+  width: 100%;
+}
+
+.taco-table.table-not-full-width {
+  width: auto;
+}
+
+.taco-table td,
+.taco-table th {
+  padding: 8px;
+  line-height: 1.42857;
+  text-align: left;
+}
+.taco-table th {
+  vertical-align: bottom;
+}
+.taco-table td {
+  vertical-align: top;
+}
+.taco-table.table-striped > tbody > tr:nth-child(odd) {
+  .dark & {
+    background-color: rgba(0, 0, 0, 0.08);
+  }
+
+  .light & {
+    background-color: rgba(0, 0, 0, 0.04);
+  }
+}
+.taco-table th.sortable {
+  cursor: pointer;
+  transition: all 0.15s ease-out 0s !important;
+}
+.taco-table th.sortable:hover {
+  transform: translateY(-1.5px);
+}
+.taco-table th.sortable:active {
+  transform: translateY(0px);
+}
+.taco-table th.sortable.sorted {
+  position: relative;
+}
+.taco-table > tbody > tr.row-highlight,
+  // .taco-table.table-striped > tbody > tr:nth-child(odd).row-highlight {
+  //   background-color: #eee; }
+  // .taco-table .column-highlight {
+  //   background-color: rgba(0, 0, 0, 0.05); }
+  .taco-table .data-type-Number,
+  .taco-table .data-type-NumberOrdinal {
+  text-align: right;
+}
+.taco-table .group-header {
+  border-left: 1px solid rgba(0, 0, 0, 0.06);
+  border-right: 1px solid rgba(0, 0, 0, 0.06);
+}
+.taco-table .group-first {
+  border-left: 1px solid rgba(0, 0, 0, 0.06);
+}
+.taco-table .group-last {
+  border-right: 1px solid rgba(0, 0, 0, 0.06);
+}
+.taco-table .sort-indicator {
+  margin-left: .25rem;
+}
+.taco-table .sort-indicator.sort-ascending:after {
+  content: "▼";
+}
+.taco-table .sort-indicator.sort-descending:after {
+  content: "▲";
+}
+.taco-table .sort-indicator:after {
+  content: "▲▼";
+  font-size: 0.4rem;
+}
+.taco-table .highlight-max,
+.taco-table .highlight-min {
+  font-weight: bold;
+}
+.taco-table > tbody.bottom-data {
+  border-top: 1px solid #ccc;
+}

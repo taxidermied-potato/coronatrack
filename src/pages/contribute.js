@@ -20,9 +20,9 @@ const SecondPage = () => (
       </p>
     </div>
     <div className="btnGroup">
-      <button className="filled pop"> <FaGithub /> Github </button>
+      <a className="pop cButton filled" href="https://github.com/taxidermied-potato/coronatrack" target="_blank" rel="noopener noreferrer"> <FaGithub /> Github </a>
       <img src={Help} className="heroImg" alt="lifebuoy"/>
-      <button className="pop"> <FaCoffee /> Ko-fi </button>
+      <a className="pop cButton" href="https://github.com/taxidermied-potato/coronatrack" target="_blank" rel="noopener noreferrer"> <FaCoffee /> Ko-fi </a>
     </div>    
     {/* <div className="containerSmall">
       <p>
