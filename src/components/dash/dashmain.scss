@@ -1,0 +1,40 @@
+.dashMain {
+  height: 100%;
+  align-self: start;
+
+  grid-column-start: 2;
+  grid-column-end: 3;
+  grid-row-start: 2;
+  grid-row-end: 3;
+
+  overflow-x: scroll;
+
+  .react-grid-layout {
+    width: 1200px;
+  }
+
+  .react-grid-item {
+    .card {
+      height: 100%;
+      box-sizing: border-box;
+      justify-content: flex-start;
+    }
+  }
+
+  .react-grid-placeholder {
+    border-radius: 5px;
+    .light & {
+      background: rgba(50, 50, 50, 0.25);
+    }
+
+    .dark & {
+      background: rgba(106, 106, 138, 0.25);
+    }
+  }
+
+  .react-resizable-handle:after {
+    .dark & {
+      border-color: #a9b2c9;
+    }
+  }
+}

@@ -61,7 +61,7 @@ function DashSide() {
                     style={provided.draggableProps.style}
                     className="draggable"
                   >
-                    <StatModule id={module.id} mType={module.type} type={module.subtype} country={module.country} key={module.id} moduleLocation="SIDE"/>
+                    <StatModule id={module.id} type={module.type} subType={module.subtype} country={module.country} key={module.id} moduleLocation="SIDE"/>
                   </div>
                 )}
               </Draggable>

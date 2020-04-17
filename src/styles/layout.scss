@@ -40,14 +40,30 @@ $secondaryColor: $darkMuted;
 .collapseIn {
   transition: all 0.5s ease-out;
   opacity: 1;
-  height: 10rem;
+  height: 10.5rem;
 }
 
 @media only screen and (max-width: 600px) {
   .collapseIn {
     transition: all 0.5s ease-out;
     opacity: 1;
-    height: 11rem;
+    height: 12rem;
+  }
+}
+
+@media only screen and (max-width: 400px) {
+  .collapseIn {
+    transition: all 0.5s ease-out;
+    opacity: 1;
+    height: 15rem;
+  }
+}
+
+@media only screen and (max-width: 350px) {
+  .collapseIn {
+    transition: all 0.5s ease-out;
+    opacity: 1;
+    height: 18rem;
   }
 }
 
@@ -78,6 +94,14 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+
+  &.dark {
+    background: $darkBack;
+  }
+
+  &.light {
+    background: $lightBack;
+  }
 }
 
 #___gatsby,
@@ -89,11 +113,10 @@ body {
   flex-grow: 1;
 }
 
-.body {
+.layoutBody {
   height: 100%;
   flex-grow: 1;
   color: $primaryColor;
-  background: $background;
 
   &.dark {
     color: $darkText;
@@ -164,7 +187,7 @@ h2 {
 h3 {
   font-family: "Bitter", serif;
   font-size: 1.5rem;
-  line-height: 1.5rem;
+  line-height: 1.6rem;
   font-weight: 900 !important;
   margin: 0 0;
   margin-bottom: 0.5rem;
@@ -312,6 +335,8 @@ a {
 .aboutContainer {
   display: flex;
   align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
 
   .card {
     padding: 1.5rem 0rem;
@@ -335,37 +360,57 @@ a {
   }
 }
 
-button {
-  padding: 0.25rem 1rem;
+@media only screen and (max-width: 600px) {
+  .btnGroup {
+    flex-direction: column;
+  }
+}
 
+button {
   font-size: 14px;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji",
     "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   font-variant: tabular-nums;
   line-height: 1.5;
-  color: $highlight;
+
+  padding: 0.25rem 0.25rem;
+  border: none;
+
+  svg {
+    margin-right: 0rem;
+  }
+
+  .dark & {
+    color: $darkText;
+  }
+
+  .light & {
+    color: $lightText;
+  }
 
   cursor: pointer;
   background: none;
-  border: 1px solid $highlight;
-  border-radius: 15px;
   display: flex;
   align-items: center;
+}
+
+.cButton {
+  display: flex;
+  align-items: center;
+  color: $highlight !important;
+  padding: 0.25rem 1rem;
+  border: 1px solid $highlight;
+  border-radius: 15px;
+
+  &.filled {
+    background: $highlight;
+    color: white !important;
+  }
 
   svg {
     margin-right: 0.5rem;
   }
-}
-
-.filled {
-  background: $highlight;
-  color: white;
-}
-
-button:focus {
-  outline: none;
-  box-shadow: 0 0 4px $highlight;
 }
 
 .heroImg {
@@ -386,6 +431,21 @@ button:focus {
 
 //Nav
 /* #region */
+
+.navMenu {
+  .MuiMenuItem-root {
+    font-size: 14px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+      "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji",
+      "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    font-variant: tabular-nums;
+    line-height: 1.5;
+  }
+
+  a {
+    color: black;
+  }
+}
 
 .nav {
   display: flex;
@@ -455,6 +515,48 @@ button:focus {
   img {
     width: 1.75rem;
     margin-right: 0.3rem;
+  }
+}
+
+.mobileLinks {
+  display: none;
+}
+
+.desktopLinks {
+  display: flex;
+}
+
+@media only screen and (max-width: 600px) {
+  .mobileLinks {
+    display: flex;
+  }
+
+  .desktopLinks {
+    display: none;
+  }
+
+  .nav {
+    padding: 1.5rem 1rem;
+
+    span {
+      padding-bottom: 0.2rem;
+      font-size: 0.5rem;
+    }
+
+    .ant-switch-inner {
+      font-size: .75rem;
+    }
+  }
+
+  .logo {
+    h1 {
+      font-size: 1.1rem;
+    }
+
+    img {
+      width: 1.5rem;
+      margin-right: 0.2rem;
+    }
   }
 }
 
