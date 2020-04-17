@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react"
 import PropTypes from "prop-types"
 import { useStaticQuery, graphql } from "gatsby"
-import { CSSTransition } from "react-transition-group"
-import { useSelector } from "react-redux"
+import { CSSTransition } from "react-transition-group";
+import { useSelector } from "react-redux";
 
 import Header from "./header"
 import "../styles/layout.scss"
@@ -27,7 +27,7 @@ const Layout = ({ children }) => {
   const darkMode = useSelector(state => state.darkMode);
 
   return (
-    <div className={darkMode ? "layoutBody dark" : "layoutBody light"}>
+    <div className={darkMode ? "body dark" : "body light"}>
       <Header siteTitle={data.site.siteMetadata.title} />
       <CSSTransition
         in={inProp}

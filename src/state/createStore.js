@@ -7,20 +7,6 @@ const reducer = (state, action) => {
       darkMode: !state.darkMode
     }
   }
-  if (action.type === `SET_THEME`) {
-    if (action.urlParam === 'light') {
-      return {
-        ...state,
-        darkMode: false
-      }
-    }
-    else if (action.urlParam === 'dark') {
-      return {
-        ...state,
-        darkMode: true
-      }
-    }
-  }
   if (action.type === `REMOVE_MODULE`) {
     if (action.location === "SIDE") {
       return {
@@ -76,48 +62,18 @@ const initialState = {
       id: '1',
       type: 'stat',
       subtype: 'cases',
-      country: ['USA'],
-    },
-    {
-      id: '2',
-      type: 'stat',
-      subtype: 'deaths',
-      country: ['USA'],
-    },
-    {
-      id: '3',
-      type: 'stat',
-      subtype: 'cases',
-      country: ['China'],
-    },
-    {
-      id: '4',
-      type: 'stat',
-      subtype: 'cases',
-      country: ['UK'],
+      country: 'USA',
     }
   ],
   sideModules: [
     {
-      id: "5",
-      type: "table",
-      subtype: (countries) => countries.filter(el => el.cases > 10000),
-      country: ['All'],
-    },
-    {
-      id: '6',
+      id: 's1',
       type: 'stat',
       subtype: 'cases',
-      country: ['All'],
-    },
-    {
-      id: '7',
-      type: 'stat',
-      subtype: 'deaths',
-      country: ['All'],
+      country: 'USA',
     }
   ],
-  totalModules: 7
+  totalModules: 2
 }
 
 const createStore = () => reduxCreateStore(reducer, initialState)
