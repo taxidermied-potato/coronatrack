@@ -10,17 +10,25 @@ import { FaPuzzlePiece, FaRegPlusSquare } from 'react-icons/fa'
 import { useSelector, useDispatch } from "react-redux";
 
 function Controller() {
-  const [moduleType, setModuleType] = useState('stat');
-  const [moduleLocation, setModuleLocation] = useState('top');
+  const [moduleType, setModuleType] = useState(null);
+  const [moduleLocation, setModuleLocation] = useState('SIDE');
   const [dataType, setDataType] = useState(null);
   const [location, setLocation] = useState(null);
+  const [locations, setLocations] = useState([]);
   const [countryData, setCountryData] = useState(null);
 
   const totalModules = useSelector(state => state.totalModules);
   const dispatch = useDispatch();
 
+  const data = [
+    { value: 'cases', label: 'Cases' },
+    { value: 'deaths', label: 'Deaths' },
+    { value: 'breakdown', label: 'Case Conditions' },
+    { value: 'tests', label: 'Testing' }
+  ]
+
   useEffect(() => {
-    fetch('https://corona.lmao.ninja/countries')
+    fetch('https://corona.lmao.ninja/v2/countries')
       .then(res => res.json())
       .then(data => {
         const mapped = data.map(d =>
@@ -29,7 +37,7 @@ function Controller() {
             label: d.country
           })
         )
-    
+
         mapped.unshift({
           value: 'All',
           label: 'All'
@@ -49,46 +57,117 @@ function Controller() {
   };
 
   const addModule = () => {
-    if (moduleType && moduleLocation && dataType && location) {
-      const newModule =
-      {
-        id: (totalModules + 1).toString(),
-        type: moduleType,
-        subtype: dataType,
-        country: location,
-      }
+    if (moduleType && moduleLocation) {
+      switch (moduleType) {
+        case 'stat': 
+          if (dataType && location) {
+            const newModule =
+            {
+              id: (totalModules + 1).toString(),
+              type: moduleType,
+              subtype: dataType.value,
+              country: [location.value],
+              data: null
+            }
 
-      console.log(newModule)
-      dispatch({ type: `ADD_MODULE`, item: newModule, location: moduleLocation })
+            console.log(newModule)
+            dispatch({ type: `ADD_MODULE`, item: newModule, location: moduleLocation })
+          }
+          else {
+            console.log('Can\'t create module, missing option')
+          }
+          break
+        case 'table':
+          if (locations.length > 0) {
+            const newModule =
+            {
+              id: (totalModules + 1).toString(),
+              type: moduleType,
+              subtype: null,
+              country: locations.map(el => el.value),
+              data: null
+            }
+
+            console.log(newModule)
+            dispatch({ type: `ADD_MODULE`, item: newModule, location: moduleLocation })
+          }
+          else {
+            console.log('Can\'t create module, missing option')
+          }
+          break
+        default:
+          break
+      }
     }
     else {
-      console.log('Missing option')
+      console.log('Can\'t create module, missing type/location')
     }
   }
-
-  const data = [
-    { value: 'cases', label: 'Cases' },
-    { value: 'deaths', label: 'Deaths' },
-    { value: 'breakdown', label: 'Case Conditions' },
-  ]
 
   function renderLocation() {
     switch (moduleType) {
       case 'stat':
-        return <FormControl component="fieldset">
-          <RadioGroup aria-label="moduleLocation" name="module2" value={moduleLocation} onChange={handleLocationChange}>
-            <FormControlLabel value="TOP" control={<Radio />} label="Top" />
-            <FormControlLabel value="SIDE" control={<Radio />} label="Side" />
-            <FormControlLabel value="main" control={<Radio />} label="Main" />
-          </RadioGroup>
-        </FormControl>;
+        return <>
+          <FormControlLabel value="TOP" control={<Radio />} label="Top" />
+          <FormControlLabel value="SIDE" control={<Radio />} label="Side" />
+          <FormControlLabel value="MAIN" control={<Radio />} label="Main" />
+        </>
+      case 'table':
+        return <>
+          <FormControlLabel value="SIDE" control={<Radio />} label="Side" />
+          <FormControlLabel value="MAIN" control={<Radio />} label="Main" />
+        </>
+      case 'graph':
+        return <>
+          <FormControlLabel value="SIDE" control={<Radio />} label="Side" />
+          <FormControlLabel value="MAIN" control={<Radio />} label="Main" />
+        </>
       default:
-        return <FormControl component="fieldset">
-          <RadioGroup aria-label="moduleLocation" name="module2" value={moduleLocation} onChange={handleLocationChange}>
-            <FormControlLabel value="SIDE" control={<Radio />} label="Side" />
-            <FormControlLabel value="main" control={<Radio />} label="Main" />
-          </RadioGroup>
-        </FormControl>;
+        return <>
+          <FormControlLabel value="TOP" control={<Radio />} label="Top" />
+          <FormControlLabel value="SIDE" control={<Radio />} label="Side" />
+          <FormControlLabel value="MAIN" control={<Radio />} label="Main" />
+        </>
+    }
+  }
+
+  function renderOptions() {
+    switch (moduleType) {
+      case 'stat':
+        return <>
+          <Select className="select" classNamePrefix="reactSelect" placeholder="Data"
+            options={data} value={dataType} onChange={(item) => setDataType(item)} />
+          <Select className="select" classNamePrefix="reactSelect" placeholder="Location"
+            options={countryData ? countryData : null} value={location} onChange={(item) => setLocation(item)} />
+        </>
+      case 'table':
+        return <>
+          <Select className="select" classNamePrefix="reactSelect" placeholder="Locations" isMulti
+            options={countryData ? countryData : null} value={locations} onChange={(item) => setLocations(item)} />
+        </>
+      // <div className="card">
+      //   <div className="cardBody">
+      //     <p>
+      //       Options WIP. Please customize table after module creation.
+      //     </p>
+      //   </div>
+      // </div>
+      case 'graph':
+        return <div className="card">
+          <div className="cardBody">
+            <p>
+              Options WIP. Please customize graph after module creation.
+            </p>
+          </div>
+        </div>
+      default:
+        return <div className="card">
+          <div className="cardBody">
+            <p>
+              Use this manager to add a module to the dashboard.
+            </p>
+          </div>
+        </div>
     }
   }
 
@@ -100,14 +179,12 @@ function Controller() {
           <div className="title">
             <p> Module Manager </p>
           </div>
-          <div className="actions pop" role="button"
+          <button className="actions pop"
             onClick={() => addModule()}
-            onKeyDown={() => addModule()}
-            tabIndex={0}
           >
-            &nbsp;Add Module
+            Add Module
             <FaRegPlusSquare />
-          </div>
+          </button>
         </div>
         <div className="cardBody">
           <FormControl component="fieldset">
@@ -117,16 +194,13 @@ function Controller() {
               <FormControlLabel value="graph" control={<Radio />} label="Graph" />
             </RadioGroup>
           </FormControl>
-          {renderLocation()}
+          <FormControl component="fieldset" className="locationPicker">
+            <RadioGroup aria-label="moduleLocation" name="module" value={moduleLocation} onChange={handleLocationChange}>
+              {renderLocation()}
+            </RadioGroup>
+          </FormControl>
           <div className="selectTray">
-            <Select className="select" classNamePrefix="reactSelect" placeholder="Data"
-              options={data} onChange={(item) => setDataType(item.value)} />
-            <Select className="select" classNamePrefix="reactSelect" placeholder="Location"
-              options={countryData ?
-                countryData
-                :
-                null
-              } onChange={(item) => setLocation(item.value)} />
+            {renderOptions()}
           </div>
         </div>
       </div>

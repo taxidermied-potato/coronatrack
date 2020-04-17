@@ -5,108 +5,104 @@ import { useDispatch } from "react-redux";
 
 import Table from './table'
 
-const covid = require('novelcovid');
+const { NovelCovid } = require('novelcovid');
+const covid = new NovelCovid();
 
-function Module({ id, mType, type, country, moduleLocation }) {
+function Module({ id, type, subType, country, moduleLocation }) {
   const [minimized, setMinimized] = useState(true)
   const [stats, setStats] = useState([])
+  const [data, setData] = useState([])
 
   const dispatch = useDispatch();
 
   useLayoutEffect(() => {
     let fetchData = async () => {
-      let tData = []
       let data = null
+      let data2 = null
 
-      if (country === 'All') {
-        data = await covid.getAll();
-      }
-      else {
-        data = await covid.getCountry({ country: country });
-      }
+      if (type === 'stat') {
+        let tData = []
 
-      const response2 = await fetch('https://corona.lmao.ninja/v2/historical/' + country)
-      const data2 = await response2.json()
-
-      let yesterday = (d => new Date(d.setDate(d.getDate() - 1)))(new Date())
-      let twoBefore = (d => new Date(d.setDate(d.getDate() - 2)))(new Date())
-
-      if (type === 'deaths' || type === "cases") {
-        let yesterdayData = null
-
-        if (country === 'All') {
-          yesterdayData = (data2[type][dateString(yesterday)] - data2[type][dateString(twoBefore)])
-          const yesterdayAdjusted = yesterday
-          yesterdayAdjusted.setHours(yesterdayAdjusted.getHours() + 2);
-          let todayData = data[type] - data2[type][dateString(yesterdayAdjusted)]
-
-          tData = [
-            {
-              desc: type,
-              num: data[type],
-              delta: (todayData / (data[type] - todayData)) * 100
-            },
-            {
-              desc: (type + ' today'),
-              num: todayData,
-              delta: ((todayData - yesterdayData) / yesterdayData) * 100
-            }
-          ]
+        if (country[0] === 'All') {
+          data = await covid.all()
+          const res = await fetch('https://corona.lmao.ninja/v2/all?yesterday')
+          data2 = await res.json()
         }
         else {
-          yesterdayData = (data2.timeline[type][dateString(yesterday)] - data2.timeline[type][dateString(twoBefore)])
+          const res2 = await fetch('https://corona.lmao.ninja/v2/countries/' + country[0])
+          data = await res2.json()
+          const res3 = await fetch('https://corona.lmao.ninja/v2/countries/' + country[0] + '?yesterday')
+          data2 = await res3.json()
+        }
 
+        if (subType === 'deaths' || subType === "cases") {
           tData = [
             {
-              desc: type,
-              num: data[type],
-              delta: (data['today' + capString(type)] / (data[type] - data['today' + capString(type)])) * 100
+              desc: subType,
+              num: data[subType],
+              delta: (data['today' + capString(subType)] / (data[subType] - data['today' + capString(subType)])) * 100
             },
             {
-              desc: (type + ' today'),
-              num: data['today' + capString(type)],
-              delta: ((data['today' + capString(type)] - yesterdayData) / yesterdayData) * 100
+              desc: (subType + ' today'),
+              num: data['today' + capString(subType)],
+              delta: ((data['today' + capString(subType)] - data2['today' + capString(subType)]) / data2['today' + capString(subType)]) * 100
             }
           ]
         }
-
-      }
-      else if (type === 'breakdown') {
-        if (country === 'All') {
+        else if (subType === 'tests') {
           tData = [
             {
-              desc: 'active',
-              num: data.active,
+              desc: subType,
+              num: data[subType],
+              delta: ((data[subType] - data2[subType]) / data[subType]) * 100
             },
             {
-              desc: 'recovered',
-              num: data.recovered,
+              desc: subType + " per million",
+              num: data["testsPerOneMillion"]
             }
           ]
         }
-        else {
+        else if (subType === 'breakdown') {
           tData = [
             {
               desc: 'critical',
               num: data.critical,
+              delta: ((data.critical - data2.critical) / data2.critical) * 100
             },
             {
               desc: 'recovered',
               num: data.recovered,
+              delta: ((data.recovered - data2.recovered) / data2.recovered) * 100
             }
           ]
         }
+
+        setStats(tData)
+      }
+      else if (type === 'table') {
+        data = await covid.countries()
+        if (!(country.includes('All'))) {
+          data = data.filter(el => country.includes(el.country))
+        }
+        if (subType) {
+          data = subType(data)
+        }
+        setData(data)
       }
 
-      setStats(tData)
       setMinimized(false)
     }
 
     fetchData()
-  }, [country, type])
+  }, [country, subType, type])
 
-  function dateString(date) {
-    return (date.getMonth()) + 1 + '/' + date.getDate() + '/' + date.getFullYear().toString().substr(2)
+  function renderTitle() {
+    if (type === "stat") {
+      return capString(subType) + " " + (country[0] ? "| " + country[0] : "")
+    }
+    else if (type === "table") {
+      return "Table"
+    }
   }
 
   function capString(str) {
@@ -114,11 +110,11 @@ function Module({ id, mType, type, country, moduleLocation }) {
   }
 
   function renderBody() {
-    if (mType === "stat") {
+    if (type === "stat") {
       return stats.map((stat, index) => renderStat(stat, index))
     }
-    else {
-      return <Table />
+    else if (type === "table") {
+      return <Table tableData={data} />
     }
   }
 
@@ -139,7 +135,6 @@ function Module({ id, mType, type, country, moduleLocation }) {
                 <p> {Math.ceil(stat.delta)}<span className="under">{(Math.ceil(stat.delta) - stat.delta).toFixed(2).substr(1) + "%"} </span> </p>
               </>
             }
-
           </div>
           :
           null
@@ -152,14 +147,15 @@ function Module({ id, mType, type, country, moduleLocation }) {
     <div className="card">
       <div className="cardHeader">
         <div className="title">
-          <p> {capString(type)} {country ? "| " + country : ""} </p>
+          <p> {renderTitle()} </p>
         </div>
         <div className="actions">
-          <FaDotCircle className="pop min" onClick={() => setMinimized(!minimized)} />
+          {moduleLocation === 'MAIN' ? null : <FaDotCircle className="pop min" onClick={() => setMinimized(!minimized)} />}    
+          {/* <FaDotCircle className="pop min" onClick={() => setMinimized(!minimized)} />       */}
           <FaDotCircle className="pop close" onClick={() => dispatch({ type: `REMOVE_MODULE`, item: id, location: moduleLocation })} />
         </div>
       </div>
-      <div className={!minimized ? "cardBody moduleCollapseIn" : "cardBody moduleCollapseOut"} style={mType === 'table' ? {maxHeight: '300px'} : null}>
+      <div className={!minimized ? "cardBody moduleCollapseIn" : "cardBody moduleCollapseOut"} style={type === 'table' ? { maxHeight: '20rem' } : null}>
         {renderBody()}
       </div>
     </div>
