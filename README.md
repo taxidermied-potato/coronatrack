@@ -11,3 +11,5 @@ A customizable dashboard for COVID-19 statistics. Each component, be it a stat c
 ## Quick start
 
 Get node and npm, clone, npm install, npm start/gatsby develop.
+
+## If you're here from the website, it's temporarily down. Sorry!
