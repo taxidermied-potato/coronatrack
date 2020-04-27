@@ -9,6 +9,9 @@ import Select from 'react-select'
 import { FaPuzzlePiece, FaRegPlusSquare } from 'react-icons/fa'
 import { useSelector, useDispatch } from "react-redux";
 
+const { NovelCovid } = require('novelcovid');
+const covid = new NovelCovid();
+
 function Controller() {
   const [moduleType, setModuleType] = useState(null);
   const [moduleLocation, setModuleLocation] = useState('SIDE');
@@ -28,24 +31,24 @@ function Controller() {
   ]
 
   useEffect(() => {
-    fetch('https://corona.lmao.ninja/v2/countries')
-      .then(res => res.json())
-      .then(data => {
-        const mapped = data.map(d =>
-          ({
-            value: d.country,
-            label: d.country
-          })
-        )
-
-        mapped.unshift({
-          value: 'All',
-          label: 'All'
+    let fetchData = async () => {
+      let data = await covid.countries()
+      const mapped = data.map(d =>
+        ({
+          value: d.country,
+          label: d.country
         })
+      )
 
-        setCountryData(mapped)
+      mapped.unshift({
+        value: 'All',
+        label: 'All'
       })
-      .catch(console.log)
+
+      setCountryData(mapped)
+    }
+    
+    fetchData()
   }, [])
 
   const handleTypeChange = event => {

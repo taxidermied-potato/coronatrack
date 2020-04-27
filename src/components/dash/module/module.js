@@ -25,13 +25,13 @@ function Module({ id, type, subType, country, moduleLocation }) {
 
         if (country[0] === 'All') {
           data = await covid.all()
-          const res = await fetch('https://corona.lmao.ninja/v2/all?yesterday')
+          const res = await fetch('https://disease.sh/v2/all?yesterday')
           data2 = await res.json()
         }
         else {
-          const res2 = await fetch('https://corona.lmao.ninja/v2/countries/' + country[0])
+          const res2 = await fetch('https://disease.sh/v2/countries/' + country[0])
           data = await res2.json()
-          const res3 = await fetch('https://corona.lmao.ninja/v2/countries/' + country[0] + '?yesterday')
+          const res3 = await fetch('https://disease.sh/v2/countries/' + country[0] + '?yesterday')
           data2 = await res3.json()
         }
 
